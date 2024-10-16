@@ -25,7 +25,8 @@ class DogsController < ApplicationController
 
     respond_to do |format|
       if @dog.save
-        format.html { redirect_to @dog, notice: "Dog was successfully created." }
+        WalkReminderJob.perform_later(@dog)
+        format.html { redirect_to dog_url(@dog), notice: "Dog was successfully created." }
         format.json { render :show, status: :created, location: @dog }
       else
         format.html { render :new, status: :unprocessable_entity }
